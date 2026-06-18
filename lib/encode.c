@@ -71,7 +71,7 @@ void
 th_set_path(TAR *t, const char *pathname)
 {
 	char suffix[2] = "";
-	char *tmp;
+	const char *tmp;
 
 #ifdef DEBUG
 	printf("in th_set_path(th, pathname=\"%s\")\n", pathname);
