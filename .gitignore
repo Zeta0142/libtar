@@ -13,3 +13,6 @@ Makefile
 /config.status
 /libtool
 /stamp-h1
+
+
+build*/
