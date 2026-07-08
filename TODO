@@ -1,3 +1,5 @@
+* FIXES:
+  - correctly handle size field in a GNU extension header
 * library API:
   - revamp API (make analogs for Unix fs access calls)
   - add dircache list to tar handle
