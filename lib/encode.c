@@ -211,3 +211,39 @@ th_set_from_stat(TAR *t, struct stat *s)
 }
 
 
+/*
+** encode a off_t in GNU extension format
+** see the "GNU Extensions to the Archive Format" section on
+** https://www.gnu.org/software/tar/manual/tar.html
+*/
+void
+gnu_size_encode(off_t n, uint8_t gnu[12])
+{
+    if (n > 0)
+    {
+        memset(gnu, 0x00, 12);
+        gnu[0] = 0x80;
+    }
+    else if (n < 0)
+        memset(gnu, 0xff, 12);
+    else
+		return;
+
+	uint64_t u = n;
+    for (int i = 11; i >= 12 - sizeof(n); i--)
+    {
+        gnu[i] = u & 0xff;
+        u >>= 8;
+    }
+}
+
+
+void
+th_set_size(TAR *t, off_t fsize)
+{
+	if (t->options & TAR_GNU && fsize > T_MAXUOCTAL)
+		gnu_size_encode(fsize, (uint8_t *)t->th_buf.size);
+	else
+		int_to_oct_nonull(fsize, (t)->th_buf.size, 12);
+}
+

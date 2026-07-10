@@ -165,3 +165,27 @@ th_get_mode(TAR *t)
 }
 
 
+/* decode a number in GNU extension format */
+off_t
+gnu_size_decode(uint8_t gnu[12])
+{
+    if (gnu[0] != 0x80 && gnu[0] != 0xff)
+		return (off_t)0;
+
+	uint64_t u = 0;
+    for (int i = 1; i < 12; i++)
+        u = (u << 8) | gnu[i];
+
+    return (off_t)u;
+}
+
+
+size_t
+th_get_size(TAR *t)
+{
+	if (t->options & TAR_GNU && (uint8_t)(t->th_buf.size[0]) == 0x80)
+		return (size_t)gnu_size_decode((uint8_t *)t->th_buf.size);
+
+	return oct_to_size(t->th_buf.size);
+}
+

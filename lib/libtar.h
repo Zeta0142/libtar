@@ -32,6 +32,7 @@ extern "C"
 #define T_NAMELEN		100
 #define T_PREFIXLEN		155
 #define T_MAXPATHLEN		(T_NAMELEN + T_PREFIXLEN)
+#define T_MAXUOCTAL		077777777777
 
 /* GNU extensions for typeflag */
 #define GNU_LONGNAME_TYPE	'L'
@@ -186,13 +187,13 @@ int th_write(TAR *t);
 
 /* decode tar header info */
 #define th_get_crc(t) oct_to_int((t)->th_buf.chksum)
-#define th_get_size(t) oct_to_size((t)->th_buf.size)
 #define th_get_mtime(t) oct_to_int((t)->th_buf.mtime)
 #define th_get_devmajor(t) oct_to_int((t)->th_buf.devmajor)
 #define th_get_devminor(t) oct_to_int((t)->th_buf.devminor)
 #define th_get_linkname(t) ((t)->th_buf.gnu_longlink \
                             ? (t)->th_buf.gnu_longlink \
                             : (t)->th_buf.linkname)
+size_t th_get_size(TAR *t);
 char *th_get_pathname(TAR *t);
 mode_t th_get_mode(TAR *t);
 uid_t th_get_uid(TAR *t);
@@ -209,10 +210,9 @@ void th_set_device(TAR *t, dev_t device);
 void th_set_user(TAR *t, uid_t uid);
 void th_set_group(TAR *t, gid_t gid);
 void th_set_mode(TAR *t, mode_t fmode);
+void th_set_size(TAR *t, off_t fsize);
 #define th_set_mtime(t, fmtime) \
 	int_to_oct_nonull((fmtime), (t)->th_buf.mtime, 12)
-#define th_set_size(t, fsize) \
-	int_to_oct_nonull((fsize), (t)->th_buf.size, 12)
 
 /* encode everything at once (except the pathname and linkname) */
 void th_set_from_stat(TAR *t, struct stat *s);
