@@ -241,9 +241,9 @@ gnu_size_encode(off_t n, uint8_t gnu[12])
 void
 th_set_size(TAR *t, off_t fsize)
 {
-	if (t->options & TAR_GNU && fsize > T_MAXUOCTAL)
+	if (t->options & TAR_GNU && fsize > T_MAXOCTSIZE)
 		gnu_size_encode(fsize, (uint8_t *)t->th_buf.size);
 	else
-		int_to_oct_nonull(fsize, (t)->th_buf.size, 12);
+		int_to_oct_nonull((long)fsize, (t)->th_buf.size, 12);
 }
 

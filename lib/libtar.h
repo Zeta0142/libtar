@@ -32,7 +32,8 @@ extern "C"
 #define T_NAMELEN		100
 #define T_PREFIXLEN		155
 #define T_MAXPATHLEN		(T_NAMELEN + T_PREFIXLEN)
-#define T_MAXUOCTAL		077777777777
+/* the maximum value for size field in string-octal */
+#define T_MAXOCTSIZE		077777777777
 
 /* GNU extensions for typeflag */
 #define GNU_LONGNAME_TYPE	'L'
@@ -286,7 +287,7 @@ size_t oct_to_size(char *oct);
 	snprintf((oct), (octlen), "%*lo ", (octlen) - 2, (unsigned long)(num))
 
 /* integer to string-octal conversion, no NULL */
-void int_to_oct_nonull(int num, char *oct, size_t octlen);
+void int_to_oct_nonull(long num, char *oct, size_t octlen);
 
 
 /***** wrapper.c **********************************************************/
